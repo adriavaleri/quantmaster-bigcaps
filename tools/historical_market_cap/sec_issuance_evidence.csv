@@ -1,0 +1,4 @@
+cik,share_class,first_session,last_session,base_accession,issued_shares,corroborating_shares,corroborating_accession,event_source,corroborating_source
+0001482512,FIGI:BBG001T6TCN9,2016-11-28,2017-01-09,0001482512-16-000219,17533099,136492235,0001482512-17-000034,https://www.sec.gov/Archives/edgar/data/1496264/000119312516778283/d298283d8k.htm,https://www.sec.gov/Archives/edgar/data/1482512/000148251217000034/a201610k.htm
+0001482512,FIGI:BBG001T6TCN9,2017-01-10,2017-02-17,0001482512-16-000219,26414674,146275476,0001482512-17-000034,https://www.sec.gov/Archives/edgar/data/1496264/000148251217000093/R24.htm,https://www.sec.gov/Archives/edgar/data/1482512/000148251217000034/a201610k.htm
+0001482512,FIGI:BBG001T6TCN9,2025-06-13,2025-08-07,0001482512-25-000043,237553442,379150864,0001482512-25-000126,https://www.sec.gov/Archives/edgar/data/1482512/000119312525140854/d222571d8k.htm,https://www.sec.gov/Archives/edgar/data/1482512/000148251225000126/hpp-20250630.htm

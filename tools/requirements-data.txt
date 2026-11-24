@@ -1,0 +1,7 @@
+boto3
+duckdb
+numpy
+pandas
+pyarrow
+requests
+tzdata

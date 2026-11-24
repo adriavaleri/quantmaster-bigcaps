@@ -1,0 +1,9 @@
+[package]
+name = "analytics_commands"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+analytics_engine = { path = "../analytics_engine" }
+serde = { version = "1", features = ["derive"] }
+tauri = { version = "2.9.2", features = [] }

@@ -1,0 +1,30 @@
+[package]
+name = "analytics_engine"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.77.2"
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+chrono = { version = "0.4", default-features = false, features = ["alloc"] }
+polars = { version = "0.51.0", default-features = false, features = [
+    "lazy",
+    "parquet",
+    "ipc",
+    "temporal",
+    "dtype-date",
+    "dtype-categorical",
+    "dtype-u16",
+    "strings",
+    "regex",
+    "rank",
+] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "2.0"
+memmap2 = "0.9.11"
+
+[dev-dependencies]
+tempfile = "3.23.0"

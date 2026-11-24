@@ -1,0 +1,10 @@
+{
+  "name": "@bigcaps/analytics",
+  "private": true,
+  "scripts": {
+    "dev": "npm run tauri:dev",
+    "tauri:dev": "npm --prefix frontend run tauri:dev",
+    "build": "npm run tauri:build",
+    "tauri:build": "npm --prefix frontend run tauri:build"
+  }
+}

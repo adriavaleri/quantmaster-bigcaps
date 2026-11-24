@@ -1,0 +1,6 @@
+{
+  "identifier": "default",
+  "description": "Minimal permissions for the Analytics desktop shell",
+  "windows": ["main"],
+  "permissions": ["core:default"]
+}

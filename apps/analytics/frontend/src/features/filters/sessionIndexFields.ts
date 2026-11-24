@@ -1,0 +1,55 @@
+import type { FilterType } from './FilterContext';
+
+export type FieldType = FilterType;
+export type FieldUnit = 'percent' | 'price' | 'volume';
+export interface FilterField { value: string; label: string; type: FieldType; section: string; group: string; unit?: FieldUnit; }
+export interface FieldGroup { section: string; group: string; }
+
+const field = (section: string, group: string, value: string, label: string, type: FieldType = 'numeric', unit?: FieldUnit): FilterField => ({ value, label, type, section, group, unit });
+const prices = (section: string, group: string, items: [string, string][]) => items.map(([value, label]) => field(section, group, value, label, 'numeric', 'price'));
+const volumes = (section: string, group: string, items: [string, string][]) => items.map(([value, label]) => field(section, group, value, label, 'numeric', 'volume'));
+const percents = (section: string, group: string, items: [string, string][]) => items.map(([value, label]) => field(section, group, value, label, 'numeric', 'percent'));
+
+export const FIELD_GROUPS: FieldGroup[] = [
+  { section: 'GENERAL', group: 'Identity' }, { section: 'GENERAL', group: 'Full Session Price' }, { section: 'GENERAL', group: 'Full Session Volume' }, { section: 'GENERAL', group: 'Full Session Behavior' }, { section: 'GENERAL', group: 'Timing' },
+  { section: 'PREVIOUS AFTER HOURS', group: 'Price' }, { section: 'PREVIOUS AFTER HOURS', group: 'Volume' }, { section: 'PREVIOUS AFTER HOURS', group: 'Behavior' }, { section: 'PREVIOUS AFTER HOURS', group: 'Timing' },
+  { section: 'OVERNIGHT', group: 'Price' }, { section: 'OVERNIGHT', group: 'Volume' }, { section: 'OVERNIGHT', group: 'Behavior' }, { section: 'OVERNIGHT', group: 'Timing' },
+  { section: 'PREMARKET', group: 'Price' }, { section: 'PREMARKET', group: 'Volume' }, { section: 'PREMARKET', group: 'Behavior' }, { section: 'PREMARKET', group: 'PMH Fades' }, { section: 'PREMARKET', group: 'Timing' },
+  { section: 'RTH', group: 'Price' }, { section: 'RTH', group: 'Volume' }, { section: 'RTH', group: 'Behavior' }, { section: 'RTH', group: 'Intraday Returns' }, { section: 'RTH', group: 'Intraday Spikes' }, { section: 'RTH', group: 'VWAP' }, { section: 'RTH', group: 'Timing' },
+  { section: 'AFTER HOURS', group: 'Price' }, { section: 'AFTER HOURS', group: 'Volume' }, { section: 'AFTER HOURS', group: 'Behavior' }, { section: 'AFTER HOURS', group: 'Timing' },
+];
+
+export const SESSION_INDEX_FIELDS: FilterField[] = [
+  field('GENERAL', 'Identity', 'date', 'Date', 'categorical'), field('GENERAL', 'Identity', 'ticker', 'Ticker', 'categorical'),
+  ...prices('GENERAL', 'Full Session Price', [['full_hod_price', 'Full HOD'], ['full_lod_price', 'Full LOD']]),
+  ...volumes('GENERAL', 'Full Session Volume', [['session_vol', 'Session Volume'], ['session_dollar_vol', 'Session Dollar Volume'], ['eod_vol', 'EOD Volume'], ['eod_dollar_vol', 'EOD Dollar Volume']]),
+  ...percents('GENERAL', 'Full Session Behavior', [['session_return_pct', 'Session Return %'], ['previous_day_change_pct', 'Previous Day Change %'], ['change_pct', 'Change % over N days'], ['session_high_spike_pct', 'Full Session High Spike %'], ['session_low_spike_pct', 'Full Session Low Spike %'], ['session_range_pct', 'Full Session Range %']]),
+  field('GENERAL', 'Timing', 'full_hod_time_ny', 'Full HOD Time', 'categorical'), field('GENERAL', 'Timing', 'full_lod_time_ny', 'Full LOD Time', 'categorical'), field('GENERAL', 'Timing', 'full_hod_to_lod_minutes', 'Full HOD to LOD Minutes'),
+  ...prices('PREVIOUS AFTER HOURS', 'Price', [['prev_day_close_price', 'Previous AH Open'], ['ah_prev_close_price', 'Previous AH Close'], ['ah_prev_high_price', 'Previous AH High'], ['ah_prev_low_price', 'Previous AH Low']]),
+  ...volumes('PREVIOUS AFTER HOURS', 'Volume', [['ah_prev_vol', 'Previous AH Volume'], ['ah_prev_dollar_vol', 'Previous AH Dollar Volume']]),
+  ...percents('PREVIOUS AFTER HOURS', 'Behavior', [['ah_prev_range_pct', 'Previous AH Range %'], ['ah_prev_return_pct', 'Previous AH Return %'], ['ah_prev_high_spike_pct', 'Previous AH High Spike %'], ['ah_prev_low_spike_pct', 'Previous AH Low Spike %'], ['ah_prev_high_fade_to_pm_open_pct', 'AH Previous High Fade to PM Open %']]),
+  field('PREVIOUS AFTER HOURS', 'Timing', 'ah_prev_high_time_ny', 'Previous AH High Time', 'categorical'), field('PREVIOUS AFTER HOURS', 'Timing', 'ah_prev_low_time_ny', 'Previous AH Low Time', 'categorical'), field('PREVIOUS AFTER HOURS', 'Timing', 'ah_prev_hod_to_lod_minutes', 'Previous AH HOD to LOD Minutes'),
+  ...prices('OVERNIGHT', 'Price', [['overnight_high_price', 'Overnight High'], ['overnight_low_price', 'Overnight Low']]),
+  ...volumes('OVERNIGHT', 'Volume', [['overnight_vol', 'Overnight Volume'], ['overnight_dollar_vol', 'Overnight Dollar Volume']]),
+  ...percents('OVERNIGHT', 'Behavior', [['overnight_range_pct', 'Overnight Range %'], ['overnight_return_pct', 'Overnight Return %'], ['overnight_high_spike_pct', 'Overnight High Spike %'], ['overnight_low_spike_pct', 'Overnight Low Spike %']]),
+  field('OVERNIGHT', 'Timing', 'overnight_high_time_ny', 'Overnight High Time', 'categorical'), field('OVERNIGHT', 'Timing', 'overnight_low_time_ny', 'Overnight Low Time', 'categorical'), field('OVERNIGHT', 'Timing', 'overnight_hod_to_lod_minutes', 'Overnight HOD to LOD Minutes'),
+  ...prices('PREMARKET', 'Price', [['pm_open_price', 'PM Open'], ['pm_close_price', 'PM Close'], ['pm_high_price', 'PM High'], ['pm_low_price', 'PM Low']]),
+  ...volumes('PREMARKET', 'Volume', [['pm_vol', 'PM Volume'], ['pm_dollar_vol', 'PM Dollar Volume']]),
+  ...percents('PREMARKET', 'Behavior', [['pm_range_pct', 'PM Range %'], ['pm_return_pct', 'PM Return %'], ['pm_high_spike_pct', 'PM High Spike %'], ['pm_low_spike_pct', 'PM Low Spike %'], ['open_position_in_pm_range', 'Open Position in PM Range']]),
+  ...percents('PREMARKET', 'PMH Fades', [['pmh_fade_to_open_pct', 'PM High Fade to Open %'], ['pmh_fade_to_close_pct', 'PM High Fade to Close %'], ['pmh_fade_to_m1_pct', 'PM High Fade to M1 %'], ['pmh_fade_to_m5_pct', 'PM High Fade to M5 %'], ['pmh_fade_to_m15_pct', 'PM High Fade to M15 %'], ['pmh_fade_to_m30_pct', 'PM High Fade to M30 %'], ['pmh_fade_to_m60_pct', 'PM High Fade to M60 %'], ['pmh_fade_to_m90_pct', 'PM High Fade to M90 %'], ['pmh_fade_to_m120_pct', 'PM High Fade to M120 %'], ['pmh_fade_to_m180_pct', 'PM High Fade to M180 %']]),
+  field('PREMARKET', 'Timing', 'pm_high_time_ny', 'PM High Time', 'categorical'), field('PREMARKET', 'Timing', 'pm_low_time_ny', 'PM Low Time', 'categorical'), field('PREMARKET', 'Timing', 'pm_hod_to_lod_minutes', 'PM HOD to LOD Minutes'),
+  ...prices('RTH', 'Price', [['open_price', 'Open'], ['close_price', 'Close'], ['hod_price', 'HOD'], ['lod_price', 'LOD']]),
+  ...volumes('RTH', 'Volume', [['rth_vol', 'RTH Volume'], ['rth_dollar_vol', 'RTH Dollar Volume']]),
+  ...percents('RTH', 'Behavior', [['open_gap_pct', 'Open Gap %'], ['rth_range_pct', 'RTH Range %'], ['rth_return_pct', 'RTH Return %'], ['rth_high_spike_pct', 'RTH High Spike %'], ['rth_low_spike_pct', 'RTH Low Spike %'], ['rth_fade_to_close_pct', 'RTH Fade to Close %'], ['close_position_in_rth_range', 'Close Position in RTH Range']]),
+  field('RTH', 'Behavior', 'close_direction', 'Close Direction'),
+  ...prices('RTH', 'Intraday Returns', [['m1_price', 'Price @ M1'], ['m5_price', 'Price @ M5'], ['m15_price', 'Price @ M15'], ['m30_price', 'Price @ M30'], ['m60_price', 'Price @ M60'], ['m90_price', 'Price @ M90'], ['m120_price', 'Price @ M120'], ['m180_price', 'Price @ M180']]),
+  ...percents('RTH', 'Intraday Returns', [['m1_return_pct', 'Return % @ M1'], ['m5_return_pct', 'Return % @ M5'], ['m15_return_pct', 'Return % @ M15'], ['m30_return_pct', 'Return % @ M30'], ['m60_return_pct', 'Return % @ M60'], ['m90_return_pct', 'Return % @ M90'], ['m120_return_pct', 'Return % @ M120'], ['m180_return_pct', 'Return % @ M180'], ['ret_m1_to_close_pct', 'Return M1 to Close %'], ['ret_m5_to_close_pct', 'Return M5 to Close %'], ['ret_m15_to_close_pct', 'Return M15 to Close %'], ['ret_m30_to_close_pct', 'Return M30 to Close %'], ['ret_m60_to_close_pct', 'Return M60 to Close %'], ['ret_m90_to_close_pct', 'Return M90 to Close %'], ['ret_m120_to_close_pct', 'Return M120 to Close %'], ['ret_m180_to_close_pct', 'Return M180 to Close %']]),
+  ...percents('RTH', 'Intraday Spikes', [['m1_high_spike_pct', 'High Spike % @ M1'], ['m5_high_spike_pct', 'High Spike % @ M5'], ['m15_high_spike_pct', 'High Spike % @ M15'], ['m30_high_spike_pct', 'High Spike % @ M30'], ['m60_high_spike_pct', 'High Spike % @ M60'], ['m90_high_spike_pct', 'High Spike % @ M90'], ['m120_high_spike_pct', 'High Spike % @ M120'], ['m180_high_spike_pct', 'High Spike % @ M180'], ['m1_low_spike_pct', 'Low Spike % @ M1'], ['m5_low_spike_pct', 'Low Spike % @ M5'], ['m15_low_spike_pct', 'Low Spike % @ M15'], ['m30_low_spike_pct', 'Low Spike % @ M30'], ['m60_low_spike_pct', 'Low Spike % @ M60'], ['m90_low_spike_pct', 'Low Spike % @ M90'], ['m120_low_spike_pct', 'Low Spike % @ M120'], ['m180_low_spike_pct', 'Low Spike % @ M180']]),
+  ...prices('RTH', 'Intraday Spikes', [['m1_high_spike_price', 'High Spike @ M1'], ['m5_high_spike_price', 'High Spike @ M5'], ['m15_high_spike_price', 'High Spike @ M15'], ['m30_high_spike_price', 'High Spike @ M30'], ['m60_high_spike_price', 'High Spike @ M60'], ['m90_high_spike_price', 'High Spike @ M90'], ['m120_high_spike_price', 'High Spike @ M120'], ['m180_high_spike_price', 'High Spike @ M180'], ['m1_low_spike_price', 'Low Spike @ M1'], ['m5_low_spike_price', 'Low Spike @ M5'], ['m15_low_spike_price', 'Low Spike @ M15'], ['m30_low_spike_price', 'Low Spike @ M30'], ['m60_low_spike_price', 'Low Spike @ M60'], ['m90_low_spike_price', 'Low Spike @ M90'], ['m120_low_spike_price', 'Low Spike @ M120'], ['m180_low_spike_price', 'Low Spike @ M180']]),
+  ...prices('RTH', 'VWAP', [['vwap_open', 'VWAP @ Open'], ['vwap_m1', 'VWAP @ M1'], ['vwap_m5', 'VWAP @ M5'], ['vwap_m15', 'VWAP @ M15'], ['vwap_m30', 'VWAP @ M30'], ['vwap_m60', 'VWAP @ M60'], ['vwap_m90', 'VWAP @ M90'], ['vwap_m120', 'VWAP @ M120'], ['vwap_m180', 'VWAP @ M180']]),
+  field('RTH', 'Timing', 'hod_time_ny', 'HOD Time', 'categorical'), field('RTH', 'Timing', 'lod_time_ny', 'LOD Time', 'categorical'), field('RTH', 'Timing', 'rth_hod_to_lod_minutes', 'RTH HOD to LOD Minutes'),
+  ...prices('AFTER HOURS', 'Price', [['ah_close_price', 'AH Close'], ['ah_high_price', 'AH High'], ['ah_low_price', 'AH Low']]),
+  ...volumes('AFTER HOURS', 'Volume', [['ah_vol', 'AH Volume'], ['ah_dollar_vol', 'AH Dollar Volume']]),
+  ...percents('AFTER HOURS', 'Behavior', [['ah_range_pct', 'AH Range %'], ['ah_return_pct', 'AH Return %'], ['ah_high_spike_pct', 'AH High Spike %'], ['ah_low_spike_pct', 'AH Low Spike %'], ['close_position_in_ah_range', 'Close Position in AH Range']]),
+  field('AFTER HOURS', 'Timing', 'ah_high_time_ny', 'AH High Time', 'categorical'), field('AFTER HOURS', 'Timing', 'ah_low_time_ny', 'AH Low Time', 'categorical'), field('AFTER HOURS', 'Timing', 'ah_hod_to_lod_minutes', 'AH HOD to LOD Minutes'),
+];

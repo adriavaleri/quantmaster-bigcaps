@@ -1,0 +1,11 @@
+{
+  "name": "bigcaps-workspace",
+  "private": true,
+  "scripts": {
+    "dev": "npm run analytics:dev",
+    "tauri:dev": "npm run analytics:dev",
+    "analytics:dev": "npm --prefix apps/analytics run tauri:dev",
+    "tauri:build": "npm run analytics:build",
+    "analytics:build": "npm --prefix apps/analytics run tauri:build"
+  }
+}
